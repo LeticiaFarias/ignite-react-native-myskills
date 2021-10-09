@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  FlatList,
+  Platform,
+} from 'react-native';
 
 import { Button } from '../components/Button';
 import { SkillCard } from '../components/SkillCard';
@@ -22,6 +29,10 @@ export function Home() {
     };
 
     setMySkills(oldState => [...oldState, data]);
+  }
+
+  function handleRemoveSkill(id: string) {
+    setMySkills(oldState => oldState.filter(skill => skill.id !== id));
   }
 
   useEffect(() => {
@@ -56,7 +67,12 @@ export function Home() {
       <FlatList
         data={mySkills}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => <SkillCard skill={item.name} />}
+        renderItem={({ item }) => (
+          <SkillCard
+            skill={item.name}
+            onPress={() => handleRemoveSkill(item.id)}
+          />
+        )}
       />
     </View>
   );
@@ -78,7 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333533',
     color: '#FFF',
     fontSize: 18,
-    padding: 10,
+    padding: Platform.OS === 'ios' ? 15 : 10,
     marginTop: 30,
     borderRadius: 7,
   },
